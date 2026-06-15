@@ -417,6 +417,32 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,.ready-btn:focus
 .bl-note{font-size:12.5px;color:var(--ink-soft);margin-top:4px}
 .tier-tabs.big .tier-tab{padding:13px 4px;font-size:13px}
 
+
+/* ===== Exercise tutorials ===== */
+.mv-tap{cursor:pointer}
+.mv-info{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:var(--rose);color:#fff;font-size:11px;font-family:'Cinzel',serif;vertical-align:middle;margin-left:5px}
+.ex-sheet{text-align:left}
+.ex-art-wrap{background:#faf4f7;border-radius:12px;padding:10px;margin-bottom:14px;text-align:center}
+.ex-art{width:100%;max-width:260px;height:auto}
+.ex-name{font-family:'Cinzel',serif;font-size:18px;color:var(--plum);letter-spacing:.04em;margin-bottom:10px;text-align:center}
+.ex-steps{margin:0 0 14px;padding-left:22px}
+.ex-steps li{font-size:16px;color:var(--ink);margin-bottom:7px;line-height:1.4}
+.ex-steps li::marker{color:var(--gold);font-family:'Cinzel',serif}
+.ex-cue,.ex-lo{border-radius:8px;padding:11px 13px;margin-bottom:9px;font-size:14.5px;color:var(--ink);line-height:1.4}
+.ex-cue{background:#f6eef2;border-left:3px solid var(--plum)}
+.ex-lo{background:#faf6ee;border-left:3px solid var(--gold)}
+.ex-cue-l,.ex-lo-l{display:block;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+.ex-cue-l{color:var(--plum)}
+.ex-lo-l{color:var(--gold-dim)}
+/* guide list */
+.ex-guide{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.ex-guide-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid var(--frame-soft);border-radius:10px;padding:8px 12px}
+.ex-guide-item:active{background:#faf4f7}
+.egi-art{flex:none;width:54px;height:40px;background:#faf4f7;border-radius:7px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.egi-art .ex-art{width:50px;height:38px}
+.egi-name{flex:1;font-size:16px;color:var(--plum)}
+.egi-arrow{color:var(--rose);font-size:18px}
+
 </style>
 </head>
 <body>
@@ -607,6 +633,69 @@ function kidify(line){
     [/Sit-to-Stand/gi,'Chair Stand-Ups'],[/Mountain Climbers?/gi,'Running Hands']];
   let out=line; map.forEach(([re,sub])=>out=out.replace(re,sub)); return out;
 }
+
+/* ============ EXERCISE TUTORIALS ============
+   Each move: { steps:[...], cue:"...", lo:"...", art:"<svg figure>" }
+   Art = simple on-brand figure (plum body, gold motion accents) on transparent bg.
+   Keyed by the exact move name used in structured.js (Dead Bug Core aliases Dead Bug).
+============ */
+const EX_ART_BASE = 'viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"';
+// small helpers for consistent figure styling
+function _exsvg(inner){return `<svg class="ex-art" ${EX_ART_BASE}>${inner}</svg>`;}
+const P='#6b3a5b', G='#c9a24b', R='#b87a93', GR='#d9c7d2';
+// reusable ground line
+const GROUND=`<line x1="20" y1="132" x2="180" y2="132" stroke="${GR}" stroke-width="3" stroke-linecap="round"/>`;
+// reusable head
+function head(x,y,r=9){return `<circle cx="${x}" cy="${y}" r="${r}" fill="${P}"/>`;}
+function limb(d,c=P,w=7){return `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;}
+
+const EXERCISES = {
+ "Squat to Toe-Raise":{steps:["Stand tall, feet shoulder-width apart.","Bend your knees and sit back like lowering into a chair.","Stand back up, then rise onto your toes.","Lower your heels and repeat."],cue:"Keep your chest up and knees tracking over your toes \u2014 don't let them cave in.",lo:"Skip the toe-raise and just do slow, controlled squats.",
+   art:_exsvg(`${GROUND}${head(100,40)}${limb("M100 49 L100 85")}${limb(`M100 60 L80 75 M100 60 L120 75`)}${limb(`M100 85 L85 110 L85 128 M100 85 L115 110 L115 128`)}<path d="M70 128 q30 -14 60 0" fill="none" stroke="${G}" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/><path d="M150 70 l8 -10 m-8 10 l-2 -12 m2 12 l11 -3" stroke="${G}" stroke-width="2.5" stroke-linecap="round" fill="none"/>`)},
+ "Step Jacks":{steps:["Stand with feet together, arms at your sides.","Step one foot out to the side as you raise your arms overhead.","Step back to center, lowering your arms.","Alternate sides at a steady pace."],cue:"Stay light and rhythmic \u2014 no jumping needed for a great cardio effect.",lo:"This already is the low-impact version of jumping jacks \u2014 keep one foot grounded.",
+   art:_exsvg(`${GROUND}${head(100,38)}${limb("M100 47 L100 92")}${limb("M100 56 L72 40 M100 56 L128 40")}${limb("M100 92 L82 126 M100 92 L122 126")}<path d="M64 38 q4 -6 9 0 M127 38 q4 -6 9 0" stroke="${G}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`)},
+ "Skater Steps":{steps:["Stand on one leg with a slight knee bend.","Step the other leg behind and across, like a speed skater.","Swing your arms naturally for balance.","Alternate side to side."],cue:"Land softly with a bent knee \u2014 control over speed.",lo:"Step side to side instead of hopping; touch the floor for balance.",
+   art:_exsvg(`${GROUND}${head(88,42)}${limb("M88 51 L108 86")}${limb("M88 60 L66 72 M88 60 L104 50")}${limb("M108 86 L96 126 M108 86 L140 120")}<path d="M150 116 q-12 -6 -22 0" stroke="${G}" stroke-width="3" stroke-dasharray="2 5" fill="none" stroke-linecap="round"/>`)},
+ "High Knees":{steps:["Stand tall with a strong core.","Lift one knee up toward waist height.","Lower it and lift the other knee.","Pump your arms and find a steady rhythm."],cue:"Stay tall \u2014 don't lean back. Land softly on the balls of your feet.",lo:"March in place, lifting knees only as high as is comfortable.",
+   art:_exsvg(`${GROUND}${head(100,36)}${limb("M100 45 L100 88")}${limb("M100 54 L82 44 M100 54 L118 66")}${limb("M100 88 L88 124 M100 88 L116 96 L110 110")}<path d="M126 78 l9 -4 m-9 4 l6 8" stroke="${G}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`)},
+ "Glute Bridges":{steps:["Lie on your back, knees bent, feet flat on the floor.","Press through your heels and lift your hips toward the ceiling.","Squeeze your glutes at the top.","Lower slowly and repeat."],cue:"Make a straight line from knees to shoulders \u2014 don't overarch your back.",lo:"Lift only as high as is comfortable; smaller range still works.",
+   art:_exsvg(`${GROUND}<path d="M55 120 L95 92 L120 92" fill="none" stroke="${P}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>${head(50,120,8)}${limb("M120 92 L120 124 M95 92 L95 124",P,7)}<path d="M86 80 q9 -8 18 0" stroke="${G}" stroke-width="3" fill="none" stroke-linecap="round"/>`)},
+ "Goblet Squats":{steps:["Hold a weight (or any household item) at your chest with both hands.","Stand with feet a bit wider than shoulders.","Sit back and down into a squat, keeping the weight close.","Drive through your heels to stand."],cue:"Keep your elbows inside your knees and chest proud at the bottom.",lo:"Use a lighter weight, or no weight at all \u2014 just bodyweight.",
+   art:_exsvg(`${GROUND}${head(100,40)}${limb("M100 49 L100 86")}<rect x="92" y="58" width="16" height="14" rx="3" fill="${G}"/>${limb("M100 60 L92 65 M100 60 L108 65")}${limb("M100 86 L84 110 L84 128 M100 86 L116 110 L116 128")}`)},
+ "Incline Push-Ups":{steps:["Place your hands on a sturdy raised surface (counter, bench, wall).","Step your feet back so your body forms a straight line.","Bend your elbows to lower your chest toward the surface.","Press back up."],cue:"Keep your body in one straight line \u2014 don't let your hips sag.",lo:"Use a higher surface (a counter or wall) to make it easier.",
+   art:_exsvg(`${GROUND}<rect x="120" y="70" width="50" height="8" rx="3" fill="${GR}"/>${head(132,66)}<path d="M138 70 L175 110 L175 128" fill="none" stroke="${P}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>${limb("M138 70 L128 78")}`)},
+ "Reverse Lunges":{steps:["Stand tall with feet hip-width apart.","Step one foot back and lower into a lunge.","Both knees bend to about 90 degrees.","Push through your front heel to return, then switch legs."],cue:"Keep your front knee over your ankle, not pushed past your toes.",lo:"Hold a wall or chair for balance, and lower only partway.",
+   art:_exsvg(`${GROUND}${head(96,40)}${limb("M96 49 L98 88")}${limb("M96 60 L82 74 M96 60 L110 74")}${limb("M98 88 L86 110 L86 128 M98 88 L128 104 L138 128")}`)},
+ "Bent-Over Rows":{steps:["Hold a weight in each hand, hinge forward at the hips.","Keep your back flat and knees slightly bent.","Pull the weights up toward your ribs, squeezing your shoulder blades.","Lower with control."],cue:"Lead with your elbows and keep your back flat \u2014 never rounded.",lo:"Use lighter weights or water bottles; row one arm at a time.",
+   art:_exsvg(`${GROUND}${head(58,60)}<path d="M64 64 L120 80" fill="none" stroke="${P}" stroke-width="7" stroke-linecap="round"/>${limb("M120 80 L120 128",P,7)}<path d="M92 78 L92 96 M108 80 L108 98" stroke="${P}" stroke-width="6" stroke-linecap="round"/><rect x="86" y="96" width="12" height="8" rx="2" fill="${G}"/><rect x="102" y="98" width="12" height="8" rx="2" fill="${G}"/>`)},
+ "Dead Bug":{steps:["Lie on your back, arms reaching toward the ceiling.","Lift your knees so they're bent at 90 degrees.","Slowly lower one arm overhead and the opposite leg toward the floor.","Return and switch sides."],cue:"Press your lower back into the floor the whole time \u2014 don't let it arch.",lo:"Move just the legs or just the arms until the full version feels easy.",
+   art:_exsvg(`${GROUND}<path d="M60 118 L120 118" stroke="${P}" stroke-width="7" stroke-linecap="round"/>${head(54,118,8)}${limb("M95 116 L95 96 L110 90",P,6)}${limb("M110 116 L120 100 L135 104",P,6)}<path d="M70 110 l-10 -6 M82 108 l-4 -11" stroke="${G}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`)},
+ "Sit-to-Stand":{steps:["Sit on the edge of a sturdy chair, feet flat.","Lean slightly forward and stand up using your legs.","Stand fully tall.","Lower back down with control and repeat."],cue:"Push through your heels and use your legs \u2014 minimize pushing with your hands.",lo:"Use your hands on the chair or your thighs for a boost.",
+   art:_exsvg(`${GROUND}<rect x="120" y="96" width="40" height="6" rx="2" fill="${GR}"/><rect x="154" y="96" width="6" height="32" fill="${GR}"/>${head(100,46)}${limb("M100 55 L108 88")}${limb("M100 64 L114 72")}${limb("M108 88 L96 112 L96 128 M108 88 L120 104 L130 116")}<path d="M118 60 q14 -8 26 2" stroke="${G}" stroke-width="3" stroke-dasharray="2 5" fill="none" stroke-linecap="round"/>`)},
+ "Floor Press":{steps:["Lie on your back, knees bent, a weight in each hand.","Start with elbows resting on the floor, weights above your chest.","Press the weights straight up until arms are extended.","Lower with control until elbows touch down."],cue:"Keep your wrists stacked over your elbows as you press.",lo:"Use lighter weights or water bottles; the floor limits the range for safety.",
+   art:_exsvg(`${GROUND}<path d="M55 118 L110 118" stroke="${P}" stroke-width="7" stroke-linecap="round"/>${head(50,118,8)}${limb("M95 116 L95 92",P,6)}<rect x="88" y="84" width="14" height="9" rx="2" fill="${G}"/><path d="M95 84 l0 -10" stroke="${G}" stroke-width="2.5" stroke-dasharray="2 4" stroke-linecap="round"/>`)},
+ "Bird Dog":{steps:["Start on all fours, hands under shoulders, knees under hips.","Reach one arm forward and the opposite leg back.","Hold for a breath, keeping your hips level.","Return and switch sides."],cue:"Keep your back flat like a tabletop \u2014 don't rotate or sag.",lo:"Extend just an arm or just a leg until you find your balance.",
+   art:_exsvg(`${GROUND}<path d="M70 100 L120 100" stroke="${P}" stroke-width="7" stroke-linecap="round"/>${head(64,98,8)}${limb("M120 100 L120 124",P,6)}${limb("M86 100 L86 124",P,6)}${limb("M64 96 L40 84",P,6)}${limb("M120 100 L150 88",P,6)}<path d="M34 80 l-6 -2 M150 84 l6 -3" stroke="${G}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`)},
+ "Suitcase Carry":{steps:["Hold a weight in one hand at your side, like a suitcase.","Stand tall with shoulders level.","Walk slowly and steadily, bracing your core.","Switch hands for the other side."],cue:"Don't lean \u2014 stay upright and resist tipping toward the weight.",lo:"Use a lighter weight; hold a wall nearby if balance is tricky.",
+   art:_exsvg(`${GROUND}${head(100,36)}${limb("M100 45 L100 92")}${limb("M100 54 L84 64 M100 54 L116 70")}<rect x="110" y="70" width="14" height="10" rx="2" fill="${G}"/>${limb("M100 92 L88 126 M100 92 L112 126")}`)},
+ "Plank Hold":{steps:["Rest on your forearms and toes, elbows under shoulders.","Form a straight line from head to heels.","Tighten your core and glutes.","Hold steady, breathing evenly."],cue:"Keep hips level with shoulders \u2014 don't let them rise or sag.",lo:"Drop to your knees instead of toes to reduce the load.",
+   art:_exsvg(`${GROUND}${head(56,96)}<path d="M62 100 L150 116" fill="none" stroke="${P}" stroke-width="7" stroke-linecap="round"/>${limb("M70 102 L70 122")}${limb("M150 116 L150 124")}<path d="M70 88 L140 102" stroke="${G}" stroke-width="2.5" stroke-dasharray="2 5" stroke-linecap="round" fill="none"/>`)},
+ "Fast Squats":{steps:["Stand with feet shoulder-width apart.","Squat down at a brisk but controlled pace.","Stand quickly back up.","Keep a steady, repeating rhythm."],cue:"Speed up the tempo but keep good depth and form \u2014 quality first.",lo:"Slow it down to a comfortable, controlled pace.",
+   art:_exsvg(`${GROUND}${head(100,42)}${limb("M100 51 L100 86")}${limb("M100 62 L82 72 M100 62 L118 72")}${limb("M100 86 L86 108 L86 128 M100 86 L114 108 L114 128")}<path d="M150 60 l6 -8 m-6 8 l-1 -10 m1 10 l9 -2" stroke="${G}" stroke-width="2.5" stroke-linecap="round" fill="none"/>`)},
+ "Mountain Climbers":{steps:["Start in a push-up position, hands under shoulders.","Drive one knee toward your chest.","Switch legs in a running motion.","Keep your hips low and core tight."],cue:"Keep your shoulders over your hands and hips from bouncing up.",lo:"Slow the pace, or place hands on a couch to raise your upper body.",
+   art:_exsvg(`${GROUND}${head(54,92)}<path d="M60 96 L140 116" fill="none" stroke="${P}" stroke-width="7" stroke-linecap="round"/>${limb("M72 100 L72 122")}${limb("M140 116 L120 118 L126 104")}${limb("M140 116 L150 124")}`)},
+ "Squat Pulses":{steps:["Lower into a squat position.","Stay low and pulse up and down a few inches.","Keep the tension in your thighs and glutes.","Breathe steadily throughout."],cue:"Stay in the bottom range \u2014 small controlled pulses, not full stands.",lo:"Make the pulses smaller, or hold a steady squat instead.",
+   art:_exsvg(`${GROUND}${head(100,46)}${limb("M100 55 L100 88")}${limb("M100 64 L84 72 M100 64 L116 72")}${limb("M100 88 L86 106 L86 128 M100 88 L114 106 L114 128")}<path d="M134 96 l0 -14 m-4 4 l4 -4 l4 4" stroke="${G}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`)},
+ "Calf Raises":{steps:["Stand tall, feet hip-width apart.","Rise up onto the balls of your feet.","Hold briefly at the top.","Lower your heels slowly and repeat."],cue:"Rise as high as you can and lower with control \u2014 don't bounce.",lo:"Hold a wall or chair for balance support.",
+   art:_exsvg(`${GROUND}${head(100,36)}${limb("M100 45 L100 96")}${limb("M100 56 L86 68 M100 56 L114 68")}${limb("M100 96 L94 122 M100 96 L106 122")}<path d="M88 124 q12 6 24 0" stroke="${G}" stroke-width="3" stroke-dasharray="2 4" fill="none" stroke-linecap="round"/><path d="M128 70 l0 -12 m-4 4 l4 -4 l4 4" stroke="${G}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`)},
+ "Fast Feet":{steps:["Stand with knees slightly bent, weight on the balls of your feet.","Run your feet in place as quickly as you can.","Keep steps small and quick.","Pump your arms to match."],cue:"Stay light and quick \u2014 think quiet, rapid taps.",lo:"Slow to a comfortable quick-march in place.",
+   art:_exsvg(`${GROUND}${head(100,38)}${limb("M100 47 L100 90")}${limb("M100 56 L84 64 M100 56 L116 64")}${limb("M100 90 L90 124 M100 90 L110 122")}<path d="M84 126 l-6 2 M116 124 l6 2 M80 120 l-6 0" stroke="${G}" stroke-width="2.5" stroke-linecap="round"/>`)},
+ "Standing Stretch":{steps:["Stand tall and reach both arms overhead.","Gently lengthen through your sides.","Breathe in as you reach, out as you relax.","Hold easily \u2014 no straining."],cue:"Stretch to a gentle, comfortable tension \u2014 never to pain.",lo:"Reach only as far as feels good; keep it soft and easy.",
+   art:_exsvg(`${GROUND}${head(100,40)}${limb("M100 49 L100 96")}${limb("M100 56 L88 34 M100 56 L112 34")}${limb("M100 96 L90 126 M100 96 L110 126")}<path d="M84 30 q4 -6 9 0 M110 30 q4 -6 9 0" stroke="${G}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`)},
+ "Cat-Cow Flow":{steps:["Start on all fours, hands under shoulders.","Drop your belly and lift your gaze (cow).","Round your spine and tuck your chin (cat).","Flow slowly between the two with your breath."],cue:"Move with your breath \u2014 inhale to arch, exhale to round.",lo:"Make the movements smaller and gentler as needed.",
+   art:_exsvg(`${GROUND}${head(58,96)}<path d="M64 98 Q100 80 138 98" fill="none" stroke="${P}" stroke-width="7" stroke-linecap="round"/>${limb("M72 96 L72 122")}${limb("M132 96 L132 122")}<path d="M70 84 Q100 68 130 84" stroke="${G}" stroke-width="2.5" stroke-dasharray="2 5" fill="none" stroke-linecap="round"/>`)}
+};
+EXERCISES["Dead Bug Core"]=EXERCISES["Dead Bug"];
 
 /* ============ TEMPLE FITNESS — CONTENT ============ */
 
@@ -917,10 +1006,13 @@ function renderSession(){
     box.appendChild(rc);
     const ul=el('ul','move-list struct');
     st.ex.forEach(ex=>{const li=el('li');const me=exLine(ex,S.tier,null);
-      let h=`<span class="bullet">\u25C6</span><div class="mv"><span class="mv-main">${esc(me.main)}</span>`;
+      const hasT=!!EXERCISES[ex.move];
+      let h=`<span class="bullet">\u25C6</span><div class="mv"><span class="mv-main${hasT?' mv-tap':''}" ${hasT?`data-ex="${esc(ex.move)}"`:''}>${esc(me.main)}${hasT?' <span class="mv-info">?</span>':''}</span>`;
       if(me.note)h+=`<span class="mv-note">${esc(me.note)}</span>`;
       others.forEach(o=>{const ol=exLine(ex,S.tier,o);const txt=(typeof ol==='string')?ol:ol.main;if(txt)h+=`<span class="mv-other"><b>${esc(o.name)}</b> ${esc(txt)}</span>`;});
-      h+=`</div>`;li.innerHTML=h;ul.appendChild(li);});
+      h+=`</div>`;li.innerHTML=h;
+      const tap=li.querySelector('.mv-tap');if(tap)tap.onclick=()=>openExerciseSheet(ex.move);
+      ul.appendChild(li);});
     box.appendChild(ul);
     const ctrl=el('div','round-ctrl');
     const cr=el('button','btn sm','Complete Round '+Math.min(SESS_ROUND+1,rounds));
@@ -1100,6 +1192,16 @@ function vManual(r){
     <div class="mt-tag">Strong, steady, and yours</div>`;
   r.appendChild(tp);
 
+  // exercise guide — browsable tutorials
+  r.appendChild(divider('Exercise Guide'));
+  r.appendChild(el('div','phase-tag','Tap any move to see how it\u2019s done \u2014 with a simple picture, steps, and an easier option.'));
+  const guide=el('div','ex-guide');
+  Object.keys(EXERCISES).filter(n=>n!=='Dead Bug Core').sort().forEach(name=>{
+    const ex=EXERCISES[name];const it=el('button','ex-guide-item');
+    it.innerHTML=`<span class="egi-art">${ex.art}</span><span class="egi-name">${esc(name)}</span><span class="egi-arrow">\u203A</span>`;
+    it.onclick=()=>openExerciseSheet(name);guide.appendChild(it);});
+  r.appendChild(guide);
+
   // creed — ornamented
   const creed=el('div','creed-card');
   creed.innerHTML=`<div class="cc-head">\u2756 The Creed \u2756</div>`+CREED.map(l=>l?`<p>${l}</p>`:'<div class="cc-gap"></div>').join('');
@@ -1153,6 +1255,14 @@ function addLog(t){S.logs.unshift({d:Date.now(),t});if(S.logs.length>300)S.logs.
 function sheet(html,actions){closeSheet();const scrim=el('div','scrim');scrim.id='scrim';const s=el('div','sheet');s.innerHTML=`<div class="grab"></div>`+html;
   const act=el('div','sheet-actions');(actions||[]).forEach(a=>{const b=el('button','btn'+(a.primary?'':' ghost')+' sm',a.t);b.onclick=a.fn;act.appendChild(b);});s.appendChild(act);scrim.appendChild(s);scrim.onclick=e=>{if(e.target===scrim)closeSheet();};document.body.appendChild(scrim);}
 function closeSheet(){const s=$('#scrim');if(s)s.remove();}
+function openExerciseSheet(name){const ex=EXERCISES[name];if(!ex)return;
+  let h=`<div class="ex-sheet"><div class="ex-art-wrap">${ex.art}</div>`;
+  h+=`<div class="ex-name">${esc(name)}</div>`;
+  h+=`<ol class="ex-steps">`+ex.steps.map(s=>`<li>${esc(s)}</li>`).join('')+`</ol>`;
+  if(ex.cue)h+=`<div class="ex-cue"><span class="ex-cue-l">Form tip</span>${esc(ex.cue)}</div>`;
+  if(ex.lo)h+=`<div class="ex-lo"><span class="ex-lo-l">Easier option</span>${esc(ex.lo)}</div>`;
+  h+=`</div>`;
+  sheet(h,[{t:'Got it',primary:true,fn:closeSheet}]);}
 function exportData(){S.lastExport=Date.now();save();const data=JSON.stringify(S,null,2);const blob=new Blob([data],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='temple-athlete-records.json';a.click();URL.revokeObjectURL(url);toast('Records exported');}
 function importData(){const inp=document.createElement('input');inp.type='file';inp.accept='application/json,.json';
   inp.onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const data=JSON.parse(rd.result);if(!data||typeof data!=='object')throw 0;S=Object.assign(S,data);save();toast('Records restored');render();}catch(err){toast('Could not read that file');}};rd.readAsText(f);};inp.click();}
